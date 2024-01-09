@@ -1,0 +1,89 @@
+import java.util.Scanner;
+
+public class StudentGradeCalculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter the number of subjects: ");
+            int numSubjects = scanner.nextInt();
+
+            if (numSubjects <= 0) {
+                System.out.println("Please enter a valid number of subjects.");
+                return;
+            }
+
+            double totalMarks = 0;
+
+            for (int i = 1; i <= numSubjects; i++) {
+                System.out.printf("Enter marks for Subject %d (out of 100): ", i);
+                int marks = scanner.nextInt();
+
+                if (marks < 0 || marks > 100) {
+                    System.out.println("Invalid marks. Marks should be between 0 and 100.");
+                    i--; // Repeat for the current subject
+                    continue;
+                }
+
+                totalMarks += marks;
+            }
+
+            double averagePercentage = totalMarks / numSubjects;
+
+            System.out.println("\nResults:");
+            System.out.println("Total Marks: " + totalMarks);
+            System.out.printf("Average Percentage: %.2f%%%n", averagePercentage);
+
+            // Allow the user to customize grading criteria
+            System.out.print("Do you want to use custom grading criteria? (yes/no): ");
+            scanner.nextLine(); // Consume the newline character
+            String customGradingInput = scanner.nextLine().toLowerCase();
+
+            if (customGradingInput.equals("yes")) {
+                System.out.println("Enter custom grading criteria:");
+                System.out.print("Grade A threshold (percentage): ");
+                double gradeAThreshold = scanner.nextDouble();
+                System.out.print("Grade B threshold (percentage): ");
+                double gradeBThreshold = scanner.nextDouble();
+                System.out.print("Grade C threshold (percentage): ");
+                double gradeCThreshold = scanner.nextDouble();
+
+                char grade = getCustomGrade(averagePercentage, gradeAThreshold, gradeBThreshold, gradeCThreshold);
+                System.out.println("Custom Grade: " + grade);
+            } else {
+                char grade = getGrade(averagePercentage);
+                System.out.println("Grade: " + grade);
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred. Please enter valid input.");
+        } finally {
+            scanner.close();
+        }
+    }
+
+    private static char getGrade(double averagePercentage) {
+        if (averagePercentage >= 90) {
+            return 'A';
+        } else if (averagePercentage >= 80) {
+            return 'B';
+        } else if (averagePercentage >= 70) {
+            return 'C';
+        } else if (averagePercentage >= 60) {
+            return 'D';
+        } else {
+            return 'F';
+        }
+    }
+
+    private static char getCustomGrade(double averagePercentage, double gradeAThreshold, double gradeBThreshold, double gradeCThreshold) {
+        if (averagePercentage >= gradeAThreshold) {
+            return 'A';
+        } else if (averagePercentage >= gradeBThreshold) {
+            return 'B';
+        } else if (averagePercentage >= gradeCThreshold) {
+            return 'C';
+        } else {
+            return 'F';
+        }
+    }
+}
